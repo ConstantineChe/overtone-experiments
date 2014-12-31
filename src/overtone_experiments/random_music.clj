@@ -9,6 +9,8 @@
 
 (def piece [:E4 :F#4 :B4 :C#5 :D5 :F#4 :E4 :C#5 :B4 :F#4 :D5 :C#5])
 
+(def E-minor [:E5 :F#5 :G5 :A6 :B6 :C6 :D6 :E6])
+
 (def blues-scale [[5 0] [5 3]
                   [4 0] [4 1] [4 2]
                   [3 0] [3 2]
@@ -54,7 +56,8 @@
 
 (stop)
 
-(randomplay (now) piece 60000)
+(randomplay (now) piece 6000)
+(randomplay (now) E-minor 3000)
 
 (defn randomplay [t notes range]
   (let [n (rand-nth notes)
