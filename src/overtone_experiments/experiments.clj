@@ -1,5 +1,7 @@
 (ns overtone-experiments.experiments
-  (:use [overtone.live]))
+  (:require [overtone.studio.fx])
+  (:use [overtone.live]
+        [overtone.inst.sampled-piano]))
 
 (odoc bus-monitor)
 

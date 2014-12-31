@@ -11,12 +11,12 @@
 
 (def E-minor [:E5 :F#5 :G5 :A6 :B6 :C6 :D6 :E6])
 
-(def blues-scale [[5 0] [5 3]
-                  [4 0] [4 1] [4 2]
-                  [3 0] [3 2]
-                  [2 0] [2 2] [2 3]
-                  [1 0] [1 3]
-                  [0 0] [0 3]])
+(def blues-scale [[5 3] [5 6]
+                  [4 3] [4 4] [4 5]
+                  [3 3] [3 5]
+                  [2 3] [2 5] [2 6]
+                  [1 3] [1 6]
+                  [0 3] [0 6]])
 
 (def effect fx/fx-reverb)
 
@@ -26,26 +26,45 @@
 (kill fx/fx-echo)
 (fx/free)
 
+(clear-fx sampled-piano)
 
 (def g (guitar))
+(def g2 (guitar))
 
-(ctl g :pre-amp 1.8 :amp 7.9)
+(ctl g2 :pre-amp 2.8 :amp 3.9
+     :rvb-mix 1.75 :rvb-room 1.4
+     :distortion 6.5)
+
+(ctl g :pre-amp 2.8 :amp 8.2
+     :rvb-mix 0.1 :rvb-room 0.1)
+
+(inst-fx! sampled-piano fx/fx-reverb)
+(inst-fx! g fx/fx-reverb)
+
 
 (guitar-strum g :Em :down 0.70)
+(guitar-strum g2 :Em :down 1)
 
-(guitar-pick g 0 0)
+(guitar-pick g2 0 0)
 
-(blues-guitar (now) blues-scale 2000)
+(def range1 (atom [1000 1000]))
+(def range2 (atom [1000 1000]))
 
-(defn blues-guitar
-  [t scale range]
+(swap! range1 (fn [x] (vector 100 1000)))
+(swap! range2 (fn [x] (vector 100 100)))
+
+(random-guitar (now) blues-scale range1 g)
+(random-guitar (now) blues-scale range2 g2)
+
+(defn random-guitar
+  [t scale range gtr]
   (let
       [n (rand-nth scale)
-        t-next (+ t (rand-int range))]
+       t-next (+ t (first @range) (rand-int (second @range)))]
     (when n
       (at t
-          (guitar-pick g (first n) (second n)))
-      (apply-by t-next #'blues-guitar [t-next scale range]))))
+          (guitar-pick gtr (first n) (second n)))
+      (apply-by t-next #'random-guitar [t-next scale range gtr]))))
 
 (piano (note :C#4))
 
