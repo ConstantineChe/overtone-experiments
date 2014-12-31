@@ -54,7 +54,7 @@
 
 (stop)
 
-(randomplay (now) piece 6000)
+(randomplay (now) piece 60000)
 
 (defn randomplay [t notes range]
   (let [n (rand-nth notes)
