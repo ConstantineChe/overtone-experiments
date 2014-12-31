@@ -47,10 +47,10 @@
 
 (piano (note :C#4))
 
-(sampled-piano (note :E5))
-(sampled-piano (note :C#5))
-(sampled-piano (note :D5))
-(sampled-piano (note :C4))
+(sampled-piano (note :F#5))
+(sampled-piano (note :G#5))
+(sampled-piano (note :A6))
+(sampled-piano (note :B6))
 
 (stop)
 
