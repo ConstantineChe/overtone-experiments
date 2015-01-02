@@ -25,7 +25,7 @@
 (fx/fx-echo 0 5 10 15)
 (kill fx/fx-echo)
 (fx/free-verb)
-(fx/fx)
+(fx/fx-sustainer)
 
 (clear-fx sampled-piano)
 
@@ -46,7 +46,12 @@
 
 (inst-fx! sampled-piano fx/fx-reverb)
 (inst-fx! guitar fx/fx-reverb)
+(kill fx/fx-freeverb)
 
+(fx/fx-freeverb 0 0.9 0.8 0.7)
+
+(fx/fx-chorus 0 0.2 0.01)
+(kill fx/fx-chorus)
 
 (guitar-strum g :Em :down 0.70)
 (guitar-strum g2 :Em :down 1)
@@ -91,7 +96,7 @@
 
 (stop)
 
-(randomplay (now) piece 6000)
+(randomplay (now) piece 60000)
 (randomplay (now) E-minor 3000)
 
 (defn randomplay [t notes range]
