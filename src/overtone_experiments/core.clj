@@ -1,6 +1,6 @@
 (ns overtone-experiments.core)
 
 (defn foo
-  "I don't do a whole lot."
+  "Here will be nothing."
   [x]
-  (println x "Hello, World!"))
+  (println x "Hello, nothing here!"))
