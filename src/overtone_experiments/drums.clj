@@ -7,11 +7,15 @@
         [overtone.inst.drum :as d]))
 
 
-(def drums-state (atom {:snare {:amp 5 :crackle-amp 20} :hat {:amp 2 :t 0.7 :low 6000 :hi 2000}}))
+(def drums-state (atom {
+                        :snare {:amp 5 :crackle-amp 20}
+                        :hat {:amp 2 :t 0.7 :low 6000 :hi 2000}
+                        :soft-hat {:decay 0.5}
+                        }))
 
-(swap! drums-state update-in [:snare :amp] (fn [x] 5))
-(swap! drums-state update-in [:hat :amp] (fn [x] 1.1))
-
+(swap! drums-state update-in [:snare :tightness] (fn [x] 1000))
+(swap! drums-state update-in [:hat :t] (fn [x] 0.7))
+(swap! drums-state update-in [:soft-hat :decay] (fn [x] 0.2))
 
 (fx/fx-reverb)
 (kill fx/fx-reverb)
@@ -22,19 +26,19 @@
 
 (ctl (fx/fx-echo) :delay-time 1.7 :decay-time 0.5 :max-delay 0.1)
 
-(ctl (fx/fx-echo) :decay-time 2.1)
+(ctl fx/fx-echo :decay-time 2.1)
 
 (kill fx/fx-echo)
 
 (def metro (metronome 70))
 
-(defn metro-fx [m fx instr step]
+(defn metro-fx [m fx instr step clr]
   (let [beat (m)]
     (at (m beat) (if (zero? (mod beat step)) (inst-fx! instr fx)))
-    (at (m (inc beat)) (clear-fx instr))
-    (apply-by (m (inc beat)) metro-fx m fx instr step [])))
+    (at (m (+ clr beat)) (if (zero? (mod beat clr)) (clear-fx instr)))
+    (apply-by (m (inc beat)) metro-fx m fx instr step clr [])))
 
-(metro :bpm 70)
+(metro :bpm 90)
 
 (defn play-beat [m sound step ctl-ref ctl-atom]
   (let [beat (m)]
@@ -54,12 +58,14 @@
 (ctl-deref :hat drums-state)
 
 (play-beat metro d/snare 1 :snare drums-state)
-(play-beat metro d/open-hat 2 :hat drums-state)
-(metro-fx metro fx/fx-reverb d/snare 3)
+(play-beat metro d/soft-hat 2 :hat drums-state)
+(play-beat metro d/soft-hat 4 :soft-hat drums-state)
+(metro-fx metro fx/fx-reverb d/snare 3 1)
+(metro-fx metro fx/fx-echo d/soft-hat 8 4)
 
 (ctl d/snare :crackle-amp 20 :amp 5)
+(d/soft-hat )
 
-(d/snare)
 (metro)
 
 (stop)
