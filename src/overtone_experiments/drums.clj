@@ -45,10 +45,6 @@
     (at (m beat) (if (zero? (mod beat step)) (apply sound (ctl-deref ctl-ref ctl-atom))))
     (apply-by (m (inc beat)) play-beat m sound step ctl-ref ctl-atom [])))
 
-(defn play-snare [nome sound ctl-ref]
-  (let [beat (nome)]
-    (at (nome beat) (apply sound (ctl-deref ctl-ref drums-state)))
-    (apply-by (nome (inc beat)) play-snare nome sound ctl-ref [])))
 
 (defn ctl-deref [ctl-ref ctl-atom]
   (let [ctl-map (ctl-ref @ctl-atom)]
